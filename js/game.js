@@ -4,6 +4,9 @@
 	var runner;
 	var jumping = false;
 	var kicking = false;
+	var text1;
+	var progress_empty;
+	var progress_full;
 
     window.onload = function() {
 	
@@ -11,9 +14,26 @@
 		
         function preload () {
 
-			//game.load.tilemap('map', 'assets/tilemaps/maps/ninja-tilemap.json', null, Phaser.Tilemap.TILED_JSON);
-			//game.load.image('ball', 'assets/sprites/shinyball.png');
-			//game.load.image('sky', 'assets/skies/sky2.png');
+			// load progress bar art
+			game.load.image('progressbar_empty', 'assets/ui/progress_empty.png');
+			game.load.image('progressbar', 'assets/ui/progress.png');
+		
+			game.stage.backgroundColor = '#50b1d4';
+			
+        }
+
+        function create () {
+				
+			progress_empty = game.add.sprite((800-600)/2,(600-40)/2, 'progressbar_empty');
+			progress_full = game.add.sprite((800-600)/2,(600-40)/2, 'progressbar');
+			game.load.setPreloadSprite(progress_full);
+		
+			 //	load status
+			text1 = game.add.text(280, (600-40)/2, '', { fill: '#FFFFFF'});
+			
+			//game.load.onLoadStart.add(loadStart, this);
+			game.load.onFileComplete.add(fileComplete, this);
+			game.load.onLoadComplete.add(loadComplete, this);
 			
 			game.load.image('bg', 'assets/background1.jpg');
 			
@@ -28,11 +48,28 @@
 			game.load.atlasJSONHash('jump', 'assets/sprites/jumping.png', 'assets/sprites/jumping.json');
 			game.load.atlasJSONHash('kick', 'assets/sprites/kicking.png', 'assets/sprites/kicking.json');
 			
+			game.load.start();
+		
         }
 
-        function create () {
+//	This callback is sent the following parameters:
+function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
+
+	text1.setText("Loaded: " + progress + "% - " + totalLoaded + " / " + totalFiles);
+
+}
+
+function loadComplete() {
+
+	game.world.remove(text1);
+	game.world.remove(progress_empty);
+	start();
+
+}
 		
-		var bg = game.add.image(0, 0, 'bg');
+function start() {
+		
+					var bg = game.add.image(0, 0, 'bg');
 		bg.scale.set(0.6);
 
 		// creation of large world bounds
@@ -87,13 +124,8 @@
 			//ball.body.collideWorldBounds = false;
 			ball.body.addCircle(ball.width*0.5);
 			
-			
-			
-		 
-					
-
-
-        }
+		
+		}
 		
 		function update() {
 
