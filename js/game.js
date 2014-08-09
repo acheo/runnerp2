@@ -148,7 +148,7 @@ function start() {
 			runner.body.setCollisionGroup(CG_Runner);
 			runner.body.collides(CG_Terrain);
 			
-			runner.body.data.gravityScale = 5;
+			runner.body.data.gravityScale = 2;
 			
 		
 			/*
@@ -180,7 +180,7 @@ function start() {
 					var anim = runner.animations.add('jump');					
 					anim.onComplete.add(jumpCompleted, this);
 					runner.animations.play('jump', 30);
-					runner.body.velocity.y -= 2400;
+					runner.body.velocity.y -= 2000;
 				}
 						
 			}
