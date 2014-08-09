@@ -11,6 +11,8 @@
 	var CG_Terrain;
 	var CG_Ball;
 	var CG_Runner;
+	
+	var lastRunnerX = 0;
 
     window.onload = function() {
 	
@@ -88,7 +90,7 @@ function start() {
 					
 			//	Enable p2 physics with gravity
 			game.physics.startSystem(Phaser.Physics.P2JS);
-			game.physics.p2.gravity.y = 2000;
+			game.physics.p2.gravity.y = 2400;
 			
 			// add some tiles to platformbuilder
 			
@@ -106,7 +108,7 @@ function start() {
 			pb.addTile('tile6');
 			pb.addTile('tile7');
 			
-			for (var i=1;i<500;i++){
+			for (var i=1;i<100;i++){
 				pb.addTile('tile1');
 			}
 			
@@ -127,7 +129,9 @@ function start() {
 			runner.animations.play('run', 30, true);
 			
 			// enable physics on non platform sprites
-			game.physics.p2.enable([ball,runner], true);
+			game.physics.p2.enable([ball,runner]);
+			//game.physics.p2.enable([ball]);
+			//game.physics.p2.enable([runner], true);
 
 			// enable physics on platform sprites
 			pb.enablePhysics();
@@ -144,7 +148,9 @@ function start() {
 			runner.body.setCollisionGroup(CG_Runner);
 			runner.body.collides(CG_Terrain);
 			
-			//game.camera.follow(runner);
+			runner.body.data.gravityScale = 5;
+			
+		
 			/*
 			game.camera.bounds = game.world.bounds;
 			game.camera.bounds.x = 0;
@@ -152,10 +158,13 @@ function start() {
 			game.camera.bounds.height = 600;
 			*/
 			
+			
 			game.camera.bounds = null;
 			game.camera.x = 0;
 			
+			
 			//game.camera.follow(runner, Phaser.Camera.FOLLOW_PLATFORMER);
+			//game.camera.follow(runner);
 			
 			started = true;
 		
@@ -171,7 +180,7 @@ function start() {
 					var anim = runner.animations.add('jump');					
 					anim.onComplete.add(jumpCompleted, this);
 					runner.animations.play('jump', 30);
-					runner.body.velocity.y -= 1000;
+					runner.body.velocity.y -= 2400;
 				}
 						
 			}
@@ -187,7 +196,8 @@ function start() {
 					anim.onComplete.add(kickCompleted, this);
 					runner.animations.play('kick', 30);
 					// todo: runner to ball range check...					
-					ball.body.velocity.x += 1000;
+					ball.body.velocity.x += 1200;
+					//ball.body.mass = 100;
 					
 				}
 			
@@ -196,7 +206,19 @@ function start() {
 			
 			if (started){
 				//game.camera.x+=5;
-				//runner.body.x = game.camera.x+100;
+				runner.body.x = lastRunnerX + 10;
+				
+				lastRunnerX = runner.body.x;
+				
+				//runner.body.data.force[0] = 0;
+				//runner.body.data.force[1] = -50;
+				
+				game.camera.x = runner.body.x - 100;
+				
+				if (runner.body.angle > 30) runner.body.angle = 30;
+				if (runner.body.angle < -30) runner.body.angle = -30;
+				
+				if (ball.body.x < runner.body.x+runner.width/2) ball.body.x = runner.body.x+runner.width/2;
 				
 			}
 			
@@ -230,7 +252,7 @@ function start() {
 			//game.debug.cameraInfo(game.camera, 32, 32);
 			
 			if (runner != null) {
-				game.debug.spriteCoords(runner, 32, 500);
+				//game.debug.spriteCoords(runner, 32, 500);
 			}
 
 		}
