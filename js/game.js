@@ -93,6 +93,9 @@ function start() {
 			game.physics.startSystem(Phaser.Physics.P2JS);
 			game.physics.p2.gravity.y = 2400;
 			
+			game.physics.p2.friction = 1;
+            game.physics.p2.restitution = 0.1;
+			
 			// add some tiles to platformbuilder
 			
 			pb.addTile('tile1');
@@ -243,6 +246,8 @@ function start() {
 				//runner.body.data.force[1] = -50;
 				
 				game.camera.x = runner.body.x - 100;
+				
+				if (game.camera.x < 0) game.camera.x = 0;
 				
 				if (runner.body.angle > 30) runner.body.angle = 30;
 				if (runner.body.angle < -30) runner.body.angle = -30;
