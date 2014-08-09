@@ -11,6 +11,7 @@
 	var CG_Terrain;
 	var CG_Ball;
 	var CG_Runner;
+	var bg;
 	
 	var lastRunnerX = 0;
 
@@ -82,7 +83,7 @@ function loadComplete() {
 function start() {
 		
 			// add background image
-			var bg = game.add.image(0, 0, 'bg');
+			bg = game.add.image(0, 0, 'bg');
 			bg.scale.set(0.6);
 
 			// creation of large world bounds
@@ -96,7 +97,7 @@ function start() {
 			
 			pb.addTile('tile1');
 			pb.addTile('tile1');
-			pb.addTile('tile2',72); // with a 72px gap before it
+			pb.addTile('tile2');
 			pb.addTile('tile5');
 			pb.addTile('tile1');
 			pb.addTile('tile1');
@@ -108,7 +109,34 @@ function start() {
 			pb.addTile('tile6');
 			pb.addTile('tile7');
 			
-			for (var i=1;i<100;i++){
+			for (var i=1;i<20;i++){
+				pb.addTile('tile1');
+			}
+			
+			pb.addTile('tile3');
+			pb.addTile('tile4',72*4); // with a 4x 72px gap before it
+			pb.addTile('tile1');
+			pb.addTile('tile1');
+			pb.addTile('tile6');
+			pb.addTile('tile7',72*3);
+			
+			for (var i=1;i<20;i++){
+				pb.addTile('tile1');
+			}
+			
+			pb.addTile('tile2');
+			pb.addTile('tile5');
+			pb.addTile('tile1');
+			pb.addTile('tile1');
+			pb.addTile('tile1');
+			pb.addTile('tile3');
+			pb.addTile('tile7');
+			pb.addTile('tile1');
+			pb.addTile('tile1');
+			pb.addTile('tile6');
+			pb.addTile('tile4');
+			
+			for (var i=1;i<60;i++){
 				pb.addTile('tile1');
 			}
 			
@@ -196,7 +224,8 @@ function start() {
 					anim.onComplete.add(kickCompleted, this);
 					runner.animations.play('kick', 30);
 					// todo: runner to ball range check...					
-					ball.body.velocity.x += 1200;
+					ball.body.velocity.x += 2000;
+					ball.body.velocity.y -= 100;
 					//ball.body.mass = 100;
 					
 				}
@@ -219,6 +248,10 @@ function start() {
 				if (runner.body.angle < -30) runner.body.angle = -30;
 				
 				if (ball.body.x < runner.body.x+runner.width/2) ball.body.x = runner.body.x+runner.width/2;
+				
+				// p-lax
+				
+				bg.x = game.camera.x/2;
 				
 			}
 			
