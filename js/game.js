@@ -8,6 +8,9 @@
 	var progress_empty;
 	var progress_full;
 	var pb; // platformbuilder
+	var CG_Terrain;
+	var CG_Ball;
+	var CG_Runner;
 
     window.onload = function() {
 	
@@ -107,6 +110,11 @@ function start() {
 				pb.addTile('tile1');
 			}
 			
+			CG_Terrain = game.physics.p2.createCollisionGroup();
+			CG_Ball = game.physics.p2.createCollisionGroup();
+			CG_Runner = game.physics.p2.createCollisionGroup();
+			//game.physics.p2.updateBoundsCollisionGroup();
+			
 			// create ball sprite
 			ball = game.add.sprite(500, 50, 'ball');
 			ball.scale.set(0.1);
@@ -125,11 +133,16 @@ function start() {
 			pb.enablePhysics();
 			
 			// load collision polygons for platform sprites
-			pb.loadPolygons();
+			pb.loadPolygons(CG_Terrain,[CG_Ball,CG_Runner]);
 		
 			// add circle body to ball
 			ball.body.clearShapes();
 			ball.body.addCircle(ball.width*0.5);
+			ball.body.setCollisionGroup(CG_Ball);
+			ball.body.collides(CG_Terrain);
+			
+			runner.body.setCollisionGroup(CG_Runner);
+			runner.body.collides(CG_Terrain);
 			
 			//game.camera.follow(runner);
 			/*
@@ -182,8 +195,8 @@ function start() {
 			}
 			
 			if (started){
-				game.camera.x+=5;
-				runner.body.x = game.camera.x+100;
+				//game.camera.x+=5;
+				//runner.body.x = game.camera.x+100;
 				
 			}
 			

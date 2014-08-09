@@ -54,7 +54,7 @@ PGE.PlatformBuilder.prototype = {
 	
 	},
 	
-	loadPolygons: function(){
+	loadPolygons: function(cg,collideslist){
 	
 		for (var t=0;t<this.tiles.length;t++){
 			var tile = this.tiles[t];
@@ -64,6 +64,8 @@ PGE.PlatformBuilder.prototype = {
 				tile.sprite.body.loadPolygon('tilepolygons', tile.imgName,0.5);
 			}
 			tile.sprite.body.static=true;
+			tile.sprite.body.setCollisionGroup(cg);
+			tile.sprite.body.collides(collideslist);
 		}
 	
 	}
