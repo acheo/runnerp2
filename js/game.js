@@ -12,6 +12,7 @@
 	var CG_Ball;
 	var CG_Runner;
 	var bg;
+    var gameConfig;
 	
 	var lastRunnerX = 0;
 
@@ -59,6 +60,7 @@
 			game.load.atlasJSONHash('jump', 'assets/sprites/jumping.png', 'assets/sprites/jumping.json');
 			game.load.atlasJSONHash('kick', 'assets/sprites/kicking.png', 'assets/sprites/kicking.json');
 			
+            game.load.text('gameConfig', 'assets/gameConfig.json');
 			// start loading
 			game.load.start();
 		
@@ -78,10 +80,11 @@ function loadComplete() {
 	start();
 
 }
-
+    
 // after all assets loaded...
 function start() {
-		
+            var a = game.cache.getText('gameConfig');
+            gameConfig = JSON.parse(a);
 			// add background image
 			bg = game.add.image(0, 0, 'bg');
 			bg.scale.set(0.6);
@@ -91,7 +94,7 @@ function start() {
 					
 			//	Enable p2 physics with gravity
 			game.physics.startSystem(Phaser.Physics.P2JS);
-			game.physics.p2.gravity.y = 2400;
+			game.physics.p2.gravity.y = gameConfig.gravity;
 			
 			game.physics.p2.friction = 1;
             game.physics.p2.restitution = 0.1;
@@ -210,25 +213,27 @@ function start() {
 					runner.loadTexture('jump', 0);
 					var anim = runner.animations.add('jump');					
 					anim.onComplete.add(jumpCompleted, this);
-					runner.animations.play('jump', 30);
-					runner.body.velocity.y -= 2000;
+					runner.animations.play('jump', gameConfig.jump.frameRate);
+					runner.body.velocity.y += gameConfig.jump.runner_vx_change;
 				}
 						
 			}
 			
 			
 			if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-			
-				if (!kicking && !jumping){
+                var dist = runner.x + runner.width - ball.x;
+                console.log(dist);
+			     var canReachBall = Math.abs(dist) < gameConfig.kick.ball_runner_maxDistance;
+				if (!kicking && !jumping && canReachBall){
 					kicking = true;
 		
 					runner.loadTexture('kick', 0);
 					var anim = runner.animations.add('kick');		
 					anim.onComplete.add(kickCompleted, this);
-					runner.animations.play('kick', 30);
+					runner.animations.play('kick', gameConfig.kick.frameRate);
 					// todo: runner to ball range check...					
-					ball.body.velocity.x += 2000;
-					ball.body.velocity.y -= 100;
+					ball.body.velocity.x += gameConfig.kick.ball_vx_change;
+					ball.body.velocity.y += gameConfig.kick.ball_vy_change;
 					//ball.body.mass = 100;
 					
 				}
@@ -294,7 +299,4 @@ function start() {
 			}
 
 		}
-
-		
-
     };

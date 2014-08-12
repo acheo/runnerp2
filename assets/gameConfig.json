@@ -1,0 +1,13 @@
+{
+   "kick":{
+      "ball_vx_change":1000,
+      "ball_vy_change":-1500,
+      "ball_runner_maxDistance":100,
+        "frameRate":30
+   },
+   "jump":{
+      "runner_vx_change":-2000,
+    "frameRate":50
+   },
+    "gravity": 2800
+}
