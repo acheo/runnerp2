@@ -6,9 +6,9 @@
       "frameRate":30
    },
    "autokick":{
-        "distance": 0,
-        "ball_vx_change":1500,
-        "ball_vy_change":-10
+        "distance": 10,
+        "ball_vx_change":1200,
+        "ball_vy_change":0
    },
    "jump":{
       "runner_vx_change":-2000,

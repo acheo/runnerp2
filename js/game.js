@@ -13,6 +13,7 @@
     var CG_Runner;
     var bg;
     var gameConfig;
+    var dist;
     
     var lastRunnerX = 0;
 
@@ -167,7 +168,7 @@ function start() {
             
             if (started){
             
-                var dist = runner.x+runner.width*0.5 - ball.x-ball.width*0.5; // note positions are central points, rather than left edge due to use of physics bodies
+                dist = (ball.x-ball.width*0.5) - (runner.x+runner.width*0.5); // note positions are central points, rather than left edge due to use of physics bodies
                 var canReachBall = Math.abs(dist) < gameConfig.kick.ball_runner_maxDistance;
                 
                 // autokick (tap) the ball at close range
@@ -237,7 +238,8 @@ function start() {
         
         function render() {
             
-            if (started) {
+            if (started) { 
+            
                 if (gameConfig.debug){
                     
                     game.debug.text('ball',32,280);
@@ -246,7 +248,10 @@ function start() {
                     game.debug.text('runner',32,480);
                     game.debug.spriteCoords(runner, 32, 500);
                     
+                    game.debug.text('dist:'+parseInt(dist),32,550);
+                    
                 }
+                
             }
 
         }
