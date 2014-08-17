@@ -165,29 +165,33 @@ function start() {
                         
             }
             
-            
-            if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-                var dist = runner.x + runner.width - ball.x;
-                console.log(dist);
-                 var canReachBall = Math.abs(dist) < gameConfig.kick.ball_runner_maxDistance;
-                if (!kicking && !jumping && canReachBall){
-                    kicking = true;
-        
-                    runner.loadTexture('kick', 0);
-                    var anim = runner.animations.add('kick');       
-                    anim.onComplete.add(kickCompleted, this);
-                    runner.animations.play('kick', gameConfig.kick.frameRate);
-                    
-                    // todo: runner to ball range check...                  
-                    ball.body.velocity.x += gameConfig.kick.ball_vx_change;
-                    ball.body.velocity.y += gameConfig.kick.ball_vy_change;
-                    
-                }
-            
-            
-            }
-            
             if (started){
+            
+                var dist = runner.x+runner.width*0.5 - ball.x-ball.width*0.5; // note positions are central points, rather than left edge due to use of physics bodies
+                var canReachBall = Math.abs(dist) < gameConfig.kick.ball_runner_maxDistance;
+                
+                // autokick (tap) the ball at close range
+                if (dist <= gameConfig.autokick.distance && !kicking && !jumping && canReachBall) {
+                    ball.body.velocity.x += gameConfig.autokick.ball_vx_change;
+                    ball.body.velocity.y += gameConfig.autokick.ball_vy_change;
+                }
+                
+                // manual keyboard driven kick
+                if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
+                    
+                    if (!kicking && !jumping && canReachBall){
+
+                            kicking = true;               
+                            runner.loadTexture('kick', 0);
+                            var anim = runner.animations.add('kick');       
+                            anim.onComplete.add(kickCompleted, this);
+                            runner.animations.play('kick', gameConfig.kick.frameRate);
+                        
+                            ball.body.velocity.x += gameConfig.kick.ball_vx_change;
+                            ball.body.velocity.y += gameConfig.kick.ball_vy_change;
+                        
+                    }               
+                }
 
                 runner.body.x = lastRunnerX + 10;               
                 lastRunnerX = runner.body.x;                
@@ -198,7 +202,7 @@ function start() {
                 if (runner.body.angle > 30) runner.body.angle = 30;
                 if (runner.body.angle < -30) runner.body.angle = -30;
                 
-                if (ball.body.x < runner.body.x+runner.width/2) ball.body.x = runner.body.x+runner.width/2;
+                if (ball.body.x - ball.width*0.5 < runner.body.x+runner.width*0.5) ball.body.x = ball.width*0.5 + runner.body.x+runner.width*0.5;
                 
                 // parallax                
                 bg.x = game.camera.x/2;
@@ -235,7 +239,13 @@ function start() {
             
             if (started) {
                 if (gameConfig.debug){
+                    
+                    game.debug.text('ball',32,280);
+                    game.debug.spriteCoords(ball, 32, 300);
+                    
+                    game.debug.text('runner',32,480);
                     game.debug.spriteCoords(runner, 32, 500);
+                    
                 }
             }
 
