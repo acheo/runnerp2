@@ -23,6 +23,8 @@
         
         pb = new PGE.PlatformBuilder(game);
         
+
+        
         function preload () {
 
             // load progress bar art
@@ -156,6 +158,25 @@ function start() {
                 }
             });
 
+            // visual controls
+            var gui = new dat.GUI();
+            var gravityController = gui.add(gameConfig, 'gravity', 0, 5000);
+            
+            gravityController.onChange(function(value) {
+              // Fires on every change, drag, keypress, etc.
+              game.physics.p2.gravity.y=value;
+            });
+            
+            var frictionController = gui.add(gameConfig, 'friction',0, 100);
+            frictionController.onChange(function(value) {
+              game.physics.p2.friction=value;
+            });
+            var restitutionController = gui.add(gameConfig, 'restitution',0, 3);
+            restitutionController.onChange(function(value) {
+              game.physics.p2.restitution=value;
+            });
+            
+            gui.add(gameConfig, 'debug');
             
             started = true;
         
