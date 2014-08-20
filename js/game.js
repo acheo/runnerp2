@@ -4,6 +4,7 @@
     var jumping = false;
     var kicking = false;
     var started = false;
+    var gameover = false;
     var text1;
     var progress_empty;
     var progress_full;
@@ -160,23 +161,34 @@ function start() {
 
             // visual controls
             var gui = new dat.GUI();
-            var gravityController = gui.add(gameConfig, 'gravity', 0, 5000);
+            var physicsFolder = gui.addFolder('Physics');
+            var gravityController = physicsFolder.add(gameConfig, 'gravity', 0, 5000);
             
             gravityController.onChange(function(value) {
               // Fires on every change, drag, keypress, etc.
               game.physics.p2.gravity.y=value;
             });
             
-            var frictionController = gui.add(gameConfig, 'friction',0, 100);
+            var frictionController = physicsFolder.add(gameConfig, 'friction',0, 100);
             frictionController.onChange(function(value) {
               game.physics.p2.friction=value;
             });
-            var restitutionController = gui.add(gameConfig, 'restitution',0, 3);
+            var restitutionController = physicsFolder.add(gameConfig, 'restitution',0, 3);
             restitutionController.onChange(function(value) {
               game.physics.p2.restitution=value;
             });
             
             gui.add(gameConfig, 'debug');
+            
+            gui.add(gameConfig, 'drawbodies').onChange(function(value) {
+                runner.body.debug = value;
+                ball.body.debug = value;
+                pb.setDrawBodies(value);
+            });
+            
+            gui.add(game, 'paused');
+            
+            gui.add(game, 'restart');
             
             started = true;
         
@@ -198,7 +210,7 @@ function start() {
                         
             }
             
-            if (started){
+            if (started && !gameover){
             
                 dist = (ball.x-ball.width*0.5) - (runner.x+runner.width*0.5); // note positions are central points, rather than left edge due to use of physics bodies
                 var canReachBall = Math.abs(dist) < gameConfig.kick.ball_runner_maxDistance;
@@ -239,6 +251,14 @@ function start() {
                 
                 // parallax                
                 bg.x = game.camera.x/2;
+                
+                // runner or ball falls offscreen => gameover
+                if (runner.y - runner.height*0.5 > 600){
+                    gameover = true;
+                }
+                if (ball.y - ball.height*0.5 > 600){
+                    gameover = true;
+                }
                 
             }
             
@@ -286,5 +306,18 @@ function start() {
                 
             }
 
+        }
+        
+        game.restart = function() {
+        
+            runner.body.reset(50,350);
+            runner.body.angle = 0;
+            ball.body.reset(500,50);
+            ball.body.angle = 0;
+            lastRunnerX = 0;
+            jumping=false;
+            kicking=false;
+            gameover=false;
+        
         }
     };

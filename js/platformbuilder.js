@@ -72,6 +72,13 @@ PGE.PlatformBuilder.prototype = {
         
         this._game.physics.p2.enable(tileSprites);
         
+    },
+    
+    setDrawBodies: function(enabled){
+    
+        for (var t=0;t<this.tiles.length;t++){
+            this.tiles[t].sprite.body.debug = enabled;
+        }
     
     },
     
