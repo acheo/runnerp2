@@ -147,6 +147,16 @@ function start() {
             game.camera.bounds = null; // disables camera bounds constraints
             game.camera.x = 0;
             
+            runner.resting = false;
+            
+            game.physics.p2.onBeginContact.add(function (a1, a2) {
+                //Runner (id == 5) colliding with a platform (velocity == 0):
+                if(a1.id == runner.body.id && a2.velocity[0] == 0 && a2.velocity[1] == 0){
+                    runner.resting = true;
+                }
+            });
+
+            
             started = true;
         
         }
@@ -155,8 +165,9 @@ function start() {
 
             if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             
-                if (!jumping && !kicking){
+                if (!jumping && !kicking && runner.resting){
                     jumping = true;
+                    runner.resting = false;
                     runner.loadTexture('jump', 0);
                     var anim = runner.animations.add('jump');                   
                     anim.onComplete.add(jumpCompleted, this);
