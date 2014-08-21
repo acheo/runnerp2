@@ -1,8 +1,9 @@
     var game;
     var ball;
-    var runner;
+    var car = {};
     var jumping = false;
     var kicking = false;
+    var resting = false;
     var started = false;
     var gameover = false;
     var text1;
@@ -114,20 +115,12 @@ function start() {
             // create ball sprite
             ball = game.add.sprite(500, 50, 'ball');
             ball.scale.set(0.1);
-    
-            //  runner sprite is using a texture atlas for all of its animation data
-            runner = game.add.sprite(50, 350, 'runner');    
-            runner.scale.set(0.8);
-            runner.loadTexture('run', 0);
-            runner.animations.add('run');
-            runner.animations.play('run', 30, true);
-                        
+            
             // enable physics on non platform sprites
             if (gameConfig.debug) {
                 game.physics.p2.enable([ball]);
-                game.physics.p2.enable([runner], true);
             } else {
-                game.physics.p2.enable([ball,runner]);
+                game.physics.p2.enable([ball]);
             }
             
             // enable physics on platform sprites
@@ -142,23 +135,70 @@ function start() {
             ball.body.setCollisionGroup(CG_Ball);
             ball.body.collides(CG_Terrain);
             
-            runner.body.setCollisionGroup(CG_Runner);
-            runner.body.collides(CG_Terrain);
-            
-            runner.body.data.gravityScale = 2;
-            
             game.camera.bounds = null; // disables camera bounds constraints
             game.camera.x = 0;
             
-            runner.resting = false;
-            
             game.physics.p2.onBeginContact.add(function (a1, a2) {
-                //Runner (id == 5) colliding with a platform (velocity == 0):
-                if(a1.id == runner.body.id && a2.velocity[0] == 0 && a2.velocity[1] == 0){
-                    runner.resting = true;
+                //Runner collides with a platform (velocity == 0):
+                if(a1.id == car.wheel_back.body.id && a2.velocity[0] == 0 && a2.velocity[1] == 0){
+                    resting = true;
+                }
+                if(a1.id == car.wheel_front.body.id && a2.velocity[0] == 0 && a2.velocity[1] == 0){
+                    resting = true;
                 }
             });
+            
+            
+            // "car" for runner
+             
+            car.carBody = game.add.sprite(50, 350); //CARBODY
+            car.carBody.scale.set(0.8);
+            car.carBody.loadTexture('run', 0);
+            car.carBody.animations.add('run');
+            car.carBody.animations.play('run', 30, true);
+            
+            car.wheel_front = game.add.sprite(50+30, 380); //FRONT WHEEL
+            car.wheel_back = game.add.sprite(50-30, 380); //BACK WHEEL 
 
+            game.physics.p2.enable([car.wheel_front, car.wheel_back,car.carBody]); //ENABLE PHYSICS FOR THESE OBJECTS
+            
+            //DEFINE CAR BODY
+            car.carBody.body.setRectangle(30,30);
+            
+            car.carBody.body.mass = 0.1;
+            car.carBody.body.setCollisionGroup(CG_Runner);
+            //car.carBody.body.collides(CG_Terrain);
+            //car.carBody.anchor.y = 0.6;
+
+            //DEFINE FRONT WHEEL
+            car.wheel_front.body.setCircle(25);
+        
+            car.wheel_front.body.mass = 1;
+            car.wheel_front.body.restitution = 0;
+            car.wheel_front.body.setCollisionGroup(CG_Runner);
+            car.wheel_front.body.collides(CG_Terrain);
+
+            //DEFINE BACK WHEEL
+            car.wheel_back.body.setCircle(25);
+      
+            car.wheel_back.body.mass = 1;
+            car.wheel_back.body.restitution = 0;
+            car.wheel_back.body.setCollisionGroup(CG_Runner);
+            car.wheel_back.body.collides(CG_Terrain);
+        
+           
+            //ADD CONSTRAINTS
+            //PrismaticConstraint(world, bodyA, bodyB, lockRotation, anchorA, anchorB, axis, maxForce)
+            var constraint = game.physics.p2.createPrismaticConstraint(car.carBody,car.wheel_front, false,[30,0],[0,0],[0,1]);
+            var constraint_1 = game.physics.p2.createPrismaticConstraint(car.carBody,car.wheel_back, false,[-30,0],[0,0],[0,1]);
+            constraint.lowerLimitEnabled=constraint.upperLimitEnabled = true;
+            constraint.upperLimit = -3;
+            constraint.lowerLimit = -4;
+            constraint_1.lowerLimitEnabled=constraint_1.upperLimitEnabled = true;
+            constraint_1.upperLimit = -3;
+            constraint_1.lowerLimit = -4;
+           
+            
             // visual controls
             var gui = new dat.GUI();
             var physicsFolder = gui.addFolder('Physics');
@@ -181,8 +221,10 @@ function start() {
             gui.add(gameConfig, 'debug');
             
             gui.add(gameConfig, 'drawbodies').onChange(function(value) {
-                runner.body.debug = value;
                 ball.body.debug = value;
+                car.carBody.body.debug = value;
+                car.wheel_front.body.debug = value;
+                car.wheel_back.body.debug = value;
                 pb.setDrawBodies(value);
             });
             
@@ -198,21 +240,23 @@ function start() {
 
             if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             
-                if (!jumping && !kicking && runner.resting){
+                if (!jumping && !kicking && resting){
                     jumping = true;
-                    runner.resting = false;
-                    runner.loadTexture('jump', 0);
-                    var anim = runner.animations.add('jump');                   
+                    resting = false;
+                    car.carBody.loadTexture('jump', 0);
+                    var anim = car.carBody.animations.add('jump');                   
                     anim.onComplete.add(jumpCompleted, this);
-                    runner.animations.play('jump', gameConfig.jump.frameRate);
-                    runner.body.velocity.y += gameConfig.jump.runner_vx_change;
+                    car.carBody.animations.play('jump', gameConfig.jump.frameRate);
+                    car.carBody.body.velocity.y += gameConfig.jump.runner_vy_change;
+                    car.wheel_back.body.velocity.y += gameConfig.jump.runner_vy_change;
+                    car.wheel_front.body.velocity.y += gameConfig.jump.runner_vy_change;
                 }
                         
             }
             
             if (started && !gameover){
             
-                dist = (ball.x-ball.width*0.5) - (runner.x+runner.width*0.5); // note positions are central points, rather than left edge due to use of physics bodies
+                dist = (ball.x-ball.width*0.5) - (car.wheel_front.x+car.wheel_front.width*0.5); // note positions are central points, rather than left edge due to use of physics bodies
                 var canReachBall = Math.abs(dist) < gameConfig.kick.ball_runner_maxDistance;
                 
                 // autokick (tap) the ball at close range
@@ -227,39 +271,44 @@ function start() {
                     if (!kicking && !jumping && canReachBall){
 
                             kicking = true;               
-                            runner.loadTexture('kick', 0);
-                            var anim = runner.animations.add('kick');       
+                            car.carBody.loadTexture('kick', 0);
+                            var anim = car.carBody.animations.add('kick');       
                             anim.onComplete.add(kickCompleted, this);
-                            runner.animations.play('kick', gameConfig.kick.frameRate);
+                            car.carBody.animations.play('kick', gameConfig.kick.frameRate);
                         
                             ball.body.velocity.x += gameConfig.kick.ball_vx_change;
                             ball.body.velocity.y += gameConfig.kick.ball_vy_change;
                         
                     }               
                 }
-
-                runner.body.x = lastRunnerX + 10;               
-                lastRunnerX = runner.body.x;                
-                game.camera.x = runner.body.x - 100;
                 
+                lastRunnerX+=10;
+                
+                car.carBody.body.x = lastRunnerX;
+                car.wheel_front.body.x = lastRunnerX + 30;
+                car.wheel_back.body.x = lastRunnerX - 30;
+                game.camera.x = car.wheel_front.body.x  - 100;
+
                 if (game.camera.x < 0) game.camera.x = 0;
                 
-                if (runner.body.angle > 30) runner.body.angle = 30;
-                if (runner.body.angle < -30) runner.body.angle = -30;
+                if (car.carBody.body.angle > 30) car.carBody.body.angle = 30;
+                if (car.carBody.body.angle < -30) car.carBody.body.angle = -30;
                 
-                if (ball.body.x - ball.width*0.5 < runner.body.x+runner.width*0.5) ball.body.x = ball.width*0.5 + runner.body.x+runner.width*0.5;
+                if (ball.body.x - ball.width*0.5 < car.wheel_front.body.x+car.wheel_front.width*0.5) ball.body.x = ball.width*0.5 + car.wheel_front.body.x+car.wheel_front.width*0.5;
                 
                 // parallax                
                 bg.x = game.camera.x/2;
                 
+                
                 // runner or ball falls offscreen => gameover
-                if (runner.y - runner.height*0.5 > 600){
+                if (car.carBody.y - car.carBody.height*0.5 > 600){
                     gameover = true;
                 }
                 if (ball.y - ball.height*0.5 > 600){
                     gameover = true;
                 }
-                
+               
+
             }
             
             
@@ -271,9 +320,9 @@ function start() {
             jumping=false;
             kicking=false;
             
-            runner.loadTexture('run', 0);
-            var anim = runner.animations.add('run');
-            runner.animations.play('run', 30,true);
+            car.carBody.loadTexture('run', 0);
+            var anim = car.carBody.animations.add('run');
+            car.carBody.animations.play('run', 30,true);
         
         }
     
@@ -282,9 +331,9 @@ function start() {
             jumping=false;
             kicking=false;
             
-            runner.loadTexture('run', 0);
-            var anim = runner.animations.add('run');
-            runner.animations.play('run', 30,true);
+            car.carBody.loadTexture('run', 0);
+            var anim = car.carBody.animations.add('run');
+            car.carBody.animations.play('run', 30,true);
         
         }
         
@@ -297,8 +346,8 @@ function start() {
                     game.debug.text('ball',32,280);
                     game.debug.spriteCoords(ball, 32, 300);
                     
-                    game.debug.text('runner',32,480);
-                    game.debug.spriteCoords(runner, 32, 500);
+                    game.debug.text('carbody',32,480);
+                    game.debug.spriteCoords(car.carBody, 32, 500);
                     
                     game.debug.text('dist:'+parseInt(dist),32,550);
                     
@@ -310,11 +359,13 @@ function start() {
         
         game.restart = function() {
         
-            runner.body.reset(50,350);
-            runner.body.angle = 0;
+            car.carBody.body.reset(100,350);
+            car.carBody.angle = 0;
+            car.wheel_front.body.reset(100+30,350+30);
+            car.wheel_back.body.reset(100-30,350+30);
             ball.body.reset(500,50);
             ball.body.angle = 0;
-            lastRunnerX = 0;
+            lastRunnerX = 100;
             jumping=false;
             kicking=false;
             gameover=false;
