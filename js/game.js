@@ -17,7 +17,7 @@
     var gameConfig;
     var dist;
     
-    var lastRunnerX = 0;
+    var positionX = 0;
 
     window.onload = function() {
     
@@ -218,6 +218,8 @@ function start() {
               game.physics.p2.restitution=value;
             });
             
+            gui.add(gameConfig, 'runspeed',1,15);
+            
             gui.add(gameConfig, 'debug');
             
             gui.add(gameConfig, 'drawbodies').onChange(function(value) {
@@ -282,11 +284,11 @@ function start() {
                     }               
                 }
                 
-                lastRunnerX+=10;
+                positionX+=gameConfig.runspeed;
                 
-                car.carBody.body.x = lastRunnerX;
-                car.wheel_front.body.x = lastRunnerX + 30;
-                car.wheel_back.body.x = lastRunnerX - 30;
+                car.carBody.body.x = positionX;
+                car.wheel_front.body.x = positionX + 30;
+                car.wheel_back.body.x = positionX - 30;
                 game.camera.x = car.wheel_front.body.x  - 100;
 
                 if (game.camera.x < 0) game.camera.x = 0;
@@ -365,9 +367,10 @@ function start() {
             car.wheel_back.body.reset(100-30,350+30);
             ball.body.reset(500,50);
             ball.body.angle = 0;
-            lastRunnerX = 100;
+            positionX = 100;
             jumping=false;
             kicking=false;
+            game.update();
             gameover=false;
         
         }
