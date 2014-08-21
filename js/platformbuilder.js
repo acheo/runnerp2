@@ -96,6 +96,20 @@ PGE.PlatformBuilder.prototype = {
             tile.sprite.body.collides(collideslist);
         }
     
+    },
+    
+    lastTile: function(){
+        
+        return this.tiles[this.tiles.length-1];
+        
+    },
+    
+    deleteLastTile: function(){
+    
+        this.nextTileX -= this.lastTile().sprite.width;
+        this.lastTile().sprite.kill();
+        this.tiles.pop();
+    
     }
 
 };

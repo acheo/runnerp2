@@ -16,6 +16,7 @@
     var bg;
     var gameConfig;
     var dist;
+    var editing = false;
     
     var positionX = 0;
 
@@ -83,6 +84,10 @@ function loadComplete() {
     game.world.remove(text1);
     game.world.remove(progress_empty);
     start();
+    
+    $('#picker').click(function(e) {
+        game.pickerClicked(e);
+    });
 
 }
     
@@ -217,7 +222,7 @@ function start() {
             restitutionController.onChange(function(value) {
               game.physics.p2.restitution=value;
             });
-            
+                       
             gui.add(gameConfig, 'runspeed',1,15);
             
             gui.add(gameConfig, 'debug');
@@ -231,6 +236,8 @@ function start() {
             });
             
             gui.add(game, 'paused');
+            
+            gui.add(game, 'editmode');
             
             gui.add(game, 'restart');
             
@@ -256,7 +263,7 @@ function start() {
                         
             }
             
-            if (started && !gameover){
+            if (started && !gameover && !editing){
             
                 dist = (ball.x-ball.width*0.5) - (car.wheel_front.x+car.wheel_front.width*0.5); // note positions are central points, rather than left edge due to use of physics bodies
                 var canReachBall = Math.abs(dist) < gameConfig.kick.ball_runner_maxDistance;
@@ -313,6 +320,11 @@ function start() {
 
             }
             
+            if (editing) {
+            
+                game.camera.x = pb.lastTile().sprite.x-300;
+            
+            }
             
         
         }
@@ -373,5 +385,48 @@ function start() {
             game.update();
             gameover=false;
         
-        }
+        };
+        
+        // activate map edit mode
+        game.editmode = function() {
+            
+            editing = !editing;
+            
+            if (editing) {
+            
+                $('#picker').css('display','block');
+            
+            
+            } else {
+            
+                $('#picker').css('display','none');
+            
+            }
+            
+        };
+        
+        game.pickerClicked = function(e){
+        
+            var mouseX = e.offsetX;
+            var mouseY = e.offsetY;
+            
+            var col = Math.floor(mouseX / (200/4));
+            var row = Math.floor(mouseY / (150/3));
+            
+            var tileIndex = row * 4 + col;
+        
+            //alert(tileIndex);
+            
+            if (tileIndex >= 0 && tileIndex <= 7){
+                pb.addTiles([tileIndex]);
+                game.physics.p2.enable([pb.lastTile().sprite]);
+                pb.loadPolygons(CG_Terrain,[CG_Ball,CG_Runner]);
+            }
+            
+            if (tileIndex == 8){
+                pb.deleteLastTile();
+            }
+        
+        };
+        
     };
