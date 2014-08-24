@@ -20,6 +20,18 @@
     
     var positionX = 0;
 
+function setGameOver(isGameOver){
+    
+    if(isGameOver){
+        gameover = true;
+        $('#gameOver').css('visibility', 'visible');
+        
+    } else {
+        gameover = false;
+        $('#gameOver').css('visibility', 'hidden');
+    }
+}
+
     window.onload = function() {
     
         game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
@@ -246,10 +258,9 @@ function start() {
         }
         
         function update() {
-
             if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             
-                if (!jumping && !kicking && resting){
+                if (!jumping && resting){
                     jumping = true;
                     resting = false;
                     car.carBody.loadTexture('jump', 0);
@@ -265,29 +276,37 @@ function start() {
             
             if (started && !gameover && !editing){
             
-                dist = (ball.x-ball.width*0.5) - (car.wheel_front.x+car.wheel_front.width*0.5); // note positions are central points, rather than left edge due to use of physics bodies
-                var canReachBall = Math.abs(dist) < gameConfig.kick.ball_runner_maxDistance;
+                var dx = (ball.x-ball.width*0.5) - (car.wheel_front.x+car.wheel_front.width*0.5); // note positions are central points, rather than left edge due to use of physics bodies
+                var dy1 = (ball.y-ball.height * 0.5) - (car.wheel_front.y + car.wheel_front.height * 0.5); 
+                var dy2 = (ball.y-ball.height * 0.5) - (car.wheel_back.y + car.wheel_back.height * 0.5); 
+                
+                ///This can be optimized. For example, we can work with distance^2 instead of the actual distance... 
+                var dist1 = Math.sqrt(dx * dx + dy1 * dy1);
+                var dist2 = Math.sqrt(dx * dx + dy2 * dy2);
+                dist = Math.min(dist1, dist2);
+                var canReachBall = dist < gameConfig.kick.ball_runner_maxDistance;
+                var canAutokick = dx <= gameConfig.autokick.distance;
                 
                 // autokick (tap) the ball at close range
-                if (dist <= gameConfig.autokick.distance && !kicking && !jumping && canReachBall) {
+                if (canAutokick && !jumping && canReachBall) {
                     ball.body.velocity.x += gameConfig.autokick.ball_vx_change;
                     ball.body.velocity.y += gameConfig.autokick.ball_vy_change;
-                }
+                } 
                 
                 // manual keyboard driven kick
                 if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
-                    
-                    if (!kicking && !jumping && canReachBall){
-
-                            kicking = true;               
+                    if (!jumping){
+                        if(!kicking){
+                            kicking = true;
                             car.carBody.loadTexture('kick', 0);
                             var anim = car.carBody.animations.add('kick');       
                             anim.onComplete.add(kickCompleted, this);
                             car.carBody.animations.play('kick', gameConfig.kick.frameRate);
-                        
+                        }
+                        if(canReachBall){
                             ball.body.velocity.x += gameConfig.kick.ball_vx_change;
                             ball.body.velocity.y += gameConfig.kick.ball_vy_change;
-                        
+                        }
                     }               
                 }
                 
@@ -303,7 +322,7 @@ function start() {
                 if (car.carBody.body.angle > 30) car.carBody.body.angle = 30;
                 if (car.carBody.body.angle < -30) car.carBody.body.angle = -30;
                 
-                if (ball.body.x - ball.width*0.5 < car.wheel_front.body.x+car.wheel_front.width*0.5) ball.body.x = ball.width*0.5 + car.wheel_front.body.x+car.wheel_front.width*0.5;
+                
                 
                 // parallax                
                 bg.x = game.camera.x/2;
@@ -311,22 +330,23 @@ function start() {
                 
                 // runner or ball falls offscreen => gameover
                 if (car.carBody.y - car.carBody.height*0.5 > 600){
-                    gameover = true;
+                    setGameOver(true);
                 }
                 if (ball.y - ball.height*0.5 > 600){
-                    gameover = true;
+                    setGameOver(true);
                 }
                
+                if (ball.body.x - ball.width*0.5 - car.wheel_front.body.x+car.wheel_front.width*0.5 < -15) {
+                    setGameOver(true);
+                }
+                
 
             }
             
             if (editing) {
-            
                 game.camera.x = pb.lastTile().sprite.x-300;
             
             }
-            
-        
         }
         
         function jumpCompleted(){
@@ -383,7 +403,7 @@ function start() {
             jumping=false;
             kicking=false;
             game.update();
-            gameover=false;
+            setGameOver(false);
         
         };
         
@@ -416,7 +436,6 @@ function start() {
             var tileIndex = row * 4 + col;
         
             //alert(tileIndex);
-            
             if (tileIndex >= 0 && tileIndex <= 7){
                 pb.addTiles([tileIndex]);
                 game.physics.p2.enable([pb.lastTile().sprite]);
@@ -430,3 +449,4 @@ function start() {
         };
         
     };
+

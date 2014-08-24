@@ -1,0 +1,13 @@
+#gameOver {
+    position: absolute;
+    text-align: center;
+    top: 186px;
+    font-size: 40px;
+    font-weight: bold;
+    color: black;
+    background-color: lightblue;
+    opacity: .8;
+    width: 800px;
+    line-height: 69px;
+    visibility: hidden;
+}
