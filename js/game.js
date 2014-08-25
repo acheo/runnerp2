@@ -156,11 +156,15 @@ function start() {
             game.camera.x = 0;
             
             game.physics.p2.onBeginContact.add(function (a1, a2) {
-                //Runner collides with a platform (velocity == 0):
-                if(a1.id == car.wheel_back.body.id && a2.velocity[0] == 0 && a2.velocity[1] == 0){
+                var backWheelResting = (a1.id == car.wheel_back.body.id && a2.velocity[0] == 0 && a2.velocity[1] == 0)
+                                    || (a2.id == car.wheel_back.body.id && a1.velocity[0] == 0 && a1.velocity[1] == 0);
+                if(backWheelResting){
                     resting = true;
                 }
-                if(a1.id == car.wheel_front.body.id && a2.velocity[0] == 0 && a2.velocity[1] == 0){
+                
+                var frontWheelResting = (a1.id == car.wheel_front.body.id && a2.velocity[0] == 0 && a2.velocity[1] == 0)
+                                    || (a2.id == car.wheel_front.body.id && a1.velocity[0] == 0 && a1.velocity[1] == 0);
+                if(frontWheelResting){
                     resting = true;
                 }
             });
@@ -292,6 +296,7 @@ function start() {
                     ball.body.velocity.x += gameConfig.autokick.ball_vx_change;
                     ball.body.velocity.y += gameConfig.autokick.ball_vy_change;
                 } 
+            
                 
                 // manual keyboard driven kick
                 if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
@@ -336,7 +341,7 @@ function start() {
                     setGameOver(true);
                 }
                
-                if (ball.body.x - ball.width*0.5 - car.wheel_front.body.x+car.wheel_front.width*0.5 < -15) {
+                if (ball.body.x - ball.width*0.5 - car.wheel_front.body.x+car.wheel_front.width*0.5 < -255) {
                     setGameOver(true);
                 }
                 
