@@ -146,6 +146,7 @@ function start() {
             // load collision polygons for platform sprites
             pb.loadPolygons(CG_Terrain,[CG_Ball,CG_Runner]);
         
+    
             // add circle body to ball
             ball.body.clearShapes();
             ball.body.addCircle(ball.width*0.5);
@@ -169,6 +170,7 @@ function start() {
                 }
             });
             
+    game.physics.p2.frameRate
             
             // "car" for runner
              
@@ -184,25 +186,25 @@ function start() {
             game.physics.p2.enable([car.wheel_front, car.wheel_back,car.carBody]); //ENABLE PHYSICS FOR THESE OBJECTS
             
             //DEFINE CAR BODY
-            car.carBody.body.setRectangle(30,30);
+            car.carBody.body.setRectangle(30,90);
             
-            car.carBody.body.mass = 0.1;
+            car.carBody.body.mass = 1.0;
             car.carBody.body.setCollisionGroup(CG_Runner);
             //car.carBody.body.collides(CG_Terrain);
             //car.carBody.anchor.y = 0.6;
 
             //DEFINE FRONT WHEEL
-            car.wheel_front.body.setCircle(25);
+            car.wheel_front.body.setCircle(35);
         
-            car.wheel_front.body.mass = 1;
+            car.wheel_front.body.mass = 1.0;
             car.wheel_front.body.restitution = 0;
             car.wheel_front.body.setCollisionGroup(CG_Runner);
             car.wheel_front.body.collides(CG_Terrain);
 
             //DEFINE BACK WHEEL
-            car.wheel_back.body.setCircle(25);
+            car.wheel_back.body.setCircle(35);
       
-            car.wheel_back.body.mass = 1;
+            car.wheel_back.body.mass = 1.0;
             car.wheel_back.body.restitution = 0;
             car.wheel_back.body.setCollisionGroup(CG_Runner);
             car.wheel_back.body.collides(CG_Terrain);
@@ -260,8 +262,10 @@ function start() {
             started = true;
         
         }
+    
         
         function update() {
+            
             if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             
                 if (!jumping && resting){
