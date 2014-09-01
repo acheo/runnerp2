@@ -56,9 +56,11 @@ PGE.PlatformBuilder.prototype = {
     },
     
     clear: function(){
-    
-        this.tiles = [];
+        while(this.lastTile() != undefined){
+            this.deleteLastTile();
+        }
         this.nextTileX = 0;
+        
     
     },
     
@@ -110,6 +112,16 @@ PGE.PlatformBuilder.prototype = {
         this.lastTile().sprite.kill();
         this.tiles.pop();
     
+    },
+    
+    
+    
+    printTiles : function() {
+        var toReturn = "";
+        for (var t=0;t<this.tiles.length;t++){
+            var tile = this.tiles[t];
+            toReturn += tile.imgName + ",";
+        }
+        console.log(toReturn);
     }
-
 };

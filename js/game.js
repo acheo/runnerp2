@@ -260,7 +260,6 @@ function start() {
             gui.add(game, 'restart');
             
             started = true;
-        
         }
     
         
@@ -353,7 +352,12 @@ function start() {
             }
             
             if (editing) {
-                game.camera.x = pb.lastTile().sprite.x-300;
+                var last = pb.lastTile();
+                if(last != undefined){
+                    game.camera.x = last.sprite.x-300;
+                } else {
+                    game.camera.x = 0;
+                }
             
             }
         }
@@ -454,6 +458,17 @@ function start() {
             if (tileIndex == 8){
                 pb.deleteLastTile();
             }
+            
+            if(tileIndex == 9){
+                pb.clear();
+                
+            }
+            if(tileIndex == 10){
+                pb.printTiles();
+                game.editmode();
+                game.restart();
+            }
+
         
         };
         
