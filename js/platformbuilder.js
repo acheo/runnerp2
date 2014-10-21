@@ -11,10 +11,12 @@ PGE.PlatformBuilder = function (game) {
 PGE.PlatformBuilder.prototype = {
 
     // add a single tile
-    addTile: function(imgName,gapSize){
-            
+    addTile: function(id,gapSize){
+        
+        var imgName = 'tile' + id;
         var newTile = {
         
+            id: id,
             imgName: imgName,
             sprite: this._game.add.sprite(0,0,imgName)
         
@@ -47,8 +49,7 @@ PGE.PlatformBuilder.prototype = {
                 this.nextTileX+= 72;
             } else {
                 // regular tile
-                var imgName = 'tile'+tileId;
-                this.addTile(imgName,null);
+                this.addTile(tileId,null);
             }
         
         }
@@ -114,14 +115,75 @@ PGE.PlatformBuilder.prototype = {
     
     },
     
-    
-    
-    printTiles : function() {
-        var toReturn = "";
+    getTileIdArray: function() {
+        var toReturn = [];
         for (var t=0;t<this.tiles.length;t++){
             var tile = this.tiles[t];
-            toReturn += tile.imgName + ",";
+            toReturn.push(tile.id);
         }
-        console.log(toReturn);
+        return toReturn;
+    },
+    
+    printTiles : function() {
+
+        console.log(this.getTileIdArray());
+        
+    },
+    
+    save: function() {
+    
+        var savedata = {};
+        
+        savedata.terrain = this.getTileIdArray();
+    
+            // generate hash
+            var hash = CryptoJS.SHA1(JSON.stringify(savedata));
+            var hashstr = hash.toString(CryptoJS.enc.Hex);
+            console.log(hashstr);
+            
+            // write to file
+            
+            $.ajax({
+              type: "POST",
+              url: "./api/save.php",
+              data: {
+                hash: hashstr,
+                savedata: JSON.stringify(savedata)
+              },
+              success: function(data){
+                
+                console.log(data);
+                
+                // redirect
+                
+                window.location = 'http://taskproj.com/runnerp2/?hash='+hash;
+                
+              },
+              dataType: 'json'
+            });
+            
+            
+    
+    },
+    
+    load: function(hash) {
+    
+        var self = this;
+    
+            $.ajax({
+              type: "GET",
+              url: './api/'+hash+'.json',
+              success: function(data){
+                
+                console.log(data);
+                self.clear();
+                self.addTiles(data.terrain);
+                self.enablePhysics();
+                self.loadPolygons(CG_Terrain,[CG_Ball,CG_Runner]);
+                
+              },
+              dataType: 'json'
+            });
+    
     }
 };

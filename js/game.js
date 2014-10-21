@@ -79,6 +79,16 @@ function setGameOver(isGameOver){
             game.load.atlasJSONHash('kick', 'assets/sprites/kicking.png', 'assets/sprites/kicking.json');
             
             game.load.text('gameConfig', 'assets/gameConfig.json');
+            
+            
+            var hash = getParameterByName('hash');
+            
+            if (hash !== ''){
+                
+                game.load.text('levelConfig', 'api/'+hash+'.json');
+                
+            }
+            
             // start loading
             game.load.start();
         
@@ -121,8 +131,17 @@ function start() {
             game.physics.p2.friction = gameConfig.friction;
             game.physics.p2.restitution = gameConfig.restitution;
             
-            // create terrain from tile id sequence in game config
-            pb.addTiles(gameConfig.terrain);
+            if (game.cache.checkTextKey('levelConfig')){
+            
+                var lev = game.cache.getText('levelConfig');
+                pb.addTiles(JSON.parse(lev).terrain);
+                
+            } else {
+            
+                // create terrain from default tile id sequence in game config
+                pb.addTiles(gameConfig.terrain);
+            
+            }
             
             // Create separate collision groups for terrain, runner and ball to allow independent collisions (terrain-ball and terrain-runner)
             CG_Terrain = game.physics.p2.createCollisionGroup();
@@ -256,6 +275,10 @@ function start() {
             gui.add(game, 'paused');
             
             gui.add(game, 'editmode');
+            
+            gui.add(game, 'save');
+            
+            gui.add(game, 'open');            
             
             gui.add(game, 'restart');
             
@@ -420,6 +443,21 @@ function start() {
         
         };
         
+        game.save = function() {
+        
+            pb.save();
+        
+        };
+
+        game.open = function() {
+        
+            var hash = prompt('hash','cc5e544b20048a528ab44bf53684863e2d0cc487');
+            if (hash !== null) {
+                pb.load(hash);
+            }
+        
+        };          
+        
         // activate map edit mode
         game.editmode = function() {
             
@@ -474,3 +512,10 @@ function start() {
         
     };
 
+    
+ function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
