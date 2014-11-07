@@ -71,6 +71,7 @@ function setGameOver(isGameOver){
             game.load.image('tile5', 'assets/sprites/terrain/tile5.png');
             game.load.image('tile6', 'assets/sprites/terrain/tile6.png');
             game.load.image('tile7', 'assets/sprites/terrain/tile7.png');
+            game.load.image('fan', 'assets/sprites/terrain/fan.png');
             
             game.load.image('ball', 'assets/sprites/soccer.png');
             game.load.physics('tilepolygons', 'assets/sprites/terrain/tiles.json');
@@ -259,6 +260,11 @@ function start() {
             restitutionController.onChange(function(value) {
               game.physics.p2.restitution=value;
             });
+            gameConfig.fanpower = -gameConfig.fan.ball_vy_change;
+            var fanController = physicsFolder.add(gameConfig, 'fanpower',0, 2000);
+            fanController.onChange(function(value) {
+              gameConfig.fan.ball_vy_change=-value;
+            });
                        
             gui.add(gameConfig, 'runspeed',1,15);
             
@@ -310,7 +316,7 @@ function start() {
                 var dy1 = (ball.y-ball.height * 0.5) - (car.wheel_front.y + car.wheel_front.height * 0.5); 
                 var dy2 = (ball.y-ball.height * 0.5) - (car.wheel_back.y + car.wheel_back.height * 0.5); 
                 
-                ///This can be optimized. For example, we can work with distance^2 instead of the actual distance... 
+                // This can be optimized. For example, we can work with distance^2 instead of the actual distance... 
                 var dist1 = Math.sqrt(dx * dx + dy1 * dy1);
                 var dist2 = Math.sqrt(dx * dx + dy2 * dy2);
                 dist = Math.min(dist1, dist2);
@@ -322,8 +328,7 @@ function start() {
                     ball.body.velocity.x += gameConfig.autokick.ball_vx_change;
                     ball.body.velocity.y += gameConfig.autokick.ball_vy_change;
                 } 
-            
-                
+                            
                 // manual keyboard driven kick
                 if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
                     if (!jumping){
@@ -353,6 +358,21 @@ function start() {
                 if (car.carBody.body.angle > 30) car.carBody.body.angle = 30;
                 if (car.carBody.body.angle < -30) car.carBody.body.angle = -30;
                 
+                // fan effect on ball
+                pb.forEachTile(function(tile){
+                
+                    if (tile.id === 100){
+                        
+                        var ts = tile.sprite;
+                        if (ball.x-ball.width*0.5 >= ts.x-ts.width*0.5) {
+                            if (ball.x+ball.width*0.5 <= ts.x+ts.width*0.5) {
+                                ball.body.velocity.y += gameConfig.fan.ball_vy_change;
+                            }
+                        }
+                        
+                    }
+                
+                });
                 
                 
                 // parallax                
@@ -505,6 +525,13 @@ function start() {
                 pb.printTiles();
                 game.editmode();
                 game.restart();
+            }
+            
+            // fan
+            if (tileIndex == 11){
+                pb.addTiles([100]);
+                game.physics.p2.enable([pb.lastTile().sprite]);
+                pb.loadPolygons(CG_Terrain,[CG_Ball,CG_Runner]);
             }
 
         

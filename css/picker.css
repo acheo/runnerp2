@@ -1,1 +1,10 @@
-#picker {display:none;width:200px;height:150px;position:absolute;right:10px;bottom:0px;background-image:url('../assets/ui/picker_4x3.png');cursor:pointer;}
+#picker {
+display:none;
+width:200px;
+height:150px;
+position:absolute;
+right:10px;
+bottom:0px;
+background-image:url('../assets/ui/picker_4x3_3.png');
+cursor:pointer;
+}

@@ -10,6 +10,9 @@
         "ball_vx_change":950,
         "ball_vy_change":0
    },
+   "fan":{
+        "ball_vy_change":-1000
+   },
    "jump":{
       "runner_vy_change":-1500,
       "frameRate":50

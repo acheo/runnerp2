@@ -14,6 +14,8 @@ PGE.PlatformBuilder.prototype = {
     addTile: function(id,gapSize){
         
         var imgName = 'tile' + id;
+        if (id === 100) imgName = 'fan';
+        
         var newTile = {
         
             id: id,
@@ -99,6 +101,12 @@ PGE.PlatformBuilder.prototype = {
             tile.sprite.body.collides(collideslist);
         }
     
+    },
+    
+    forEachTile: function(callback){
+        for (var t=0;t<this.tiles.length;t++){
+            callback(this.tiles[t]);
+        }
     },
     
     lastTile: function(){
