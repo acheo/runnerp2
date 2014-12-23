@@ -1,4 +1,6 @@
+    var PGE = PGE || {}; // Namespace - Platform Game Engine
     var game;
+    var map;
     var ball;
     var car = {};
     var jumping = false;
@@ -34,9 +36,12 @@ function setGameOver(isGameOver){
 
     window.onload = function() {
     
-        game = new Phaser.Game(800, 600, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
+        PGE.width = 1920;
+        PGE.height = 1080;
+    
+        game = new Phaser.Game(PGE.width, PGE.height, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
         
-        pb = new PGE.PlatformBuilder(game);
+        //pb = new PGE.PlatformBuilder(game);
         
 
         
@@ -53,28 +58,33 @@ function setGameOver(isGameOver){
         function create () {
             
             // create temporary progress bar sprites
-            progress_empty = game.add.sprite((800-600)/2,(600-40)/2, 'progressbar_empty');
-            progress_full = game.add.sprite((800-600)/2,(600-40)/2, 'progressbar');
+            progress_empty = game.add.sprite((PGE.width-600)/2,(PGE.height-40)/2, 'progressbar_empty');
+            progress_full = game.add.sprite((PGE.width-600)/2,(PGE.height-40)/2, 'progressbar');
             game.load.setPreloadSprite(progress_full);
         
              // load status
-            text1 = game.add.text(280, (600-40)/2, '', { fill: '#FFFFFF'});
+            text1 = game.add.text(280, (PGE.height-40)/2, '', { fill: '#FFFFFF'});
             game.load.onFileComplete.add(fileComplete, this);
             game.load.onLoadComplete.add(loadComplete, this);
             
             // queue assets for loading
+            game.load.tilemap('map', 'assets/raul/48x27.json', null, Phaser.Tilemap.TILED_JSON);
             game.load.image('bg', 'assets/background1.jpg');
-            game.load.image('tile1', 'assets/sprites/terrain/tile1.png');
-            game.load.image('tile2', 'assets/sprites/terrain/tile2.png');
-            game.load.image('tile3', 'assets/sprites/terrain/tile3.png');
-            game.load.image('tile4', 'assets/sprites/terrain/tile4.png');
-            game.load.image('tile5', 'assets/sprites/terrain/tile5.png');
-            game.load.image('tile6', 'assets/sprites/terrain/tile6.png');
-            game.load.image('tile7', 'assets/sprites/terrain/tile7.png');
-            game.load.image('fan', 'assets/sprites/terrain/fan.png');
+            game.load.image('1', 'assets/raul/1/1.png');
+            game.load.image('2', 'assets/raul/2/2.png');
+            game.load.image('3', 'assets/raul/3/3.png');
+            game.load.image('4', 'assets/raul/4.png');
+            game.load.image('5', 'assets/raul/5.png');
+            game.load.image('6', 'assets/raul/6.png');
+            game.load.image('fan', 'assets/raul/fan.png');            
+            game.load.image('ball', 'assets/raul/ball.png');
             
-            game.load.image('ball', 'assets/sprites/soccer.png');
-            game.load.physics('tilepolygons', 'assets/sprites/terrain/tiles.json');
+            game.load.physics('1', 'assets/raul/1/1.json');
+            game.load.physics('2a', 'assets/raul/2/2a.json');
+          //  game.load.physics('2b', 'assets/raul/2/2b.json');
+          //  game.load.physics('3a', 'assets/raul/3/3a.json');
+          //  game.load.physics('3b', 'assets/raul/3/3b.json');
+          //  game.load.physics('3c', 'assets/raul/3/3c.json');
             game.load.atlasJSONHash('run', 'assets/sprites/running.png', 'assets/sprites/running.json');
             game.load.atlasJSONHash('jump', 'assets/sprites/jumping.png', 'assets/sprites/jumping.json');
             game.load.atlasJSONHash('kick', 'assets/sprites/kicking.png', 'assets/sprites/kicking.json');
@@ -120,10 +130,10 @@ function start() {
             gameConfig = JSON.parse(a);
             // add background image
             bg = game.add.image(0, 0, 'bg');
-            bg.scale.set(0.6);
+            //bg.scale.set(0.6);
 
             // creation of large world bounds
-            game.world.bounds = new Phaser.Rectangle(-800, -600, 800*3, 600*3);  
+            game.world.bounds = new Phaser.Rectangle(-PGE.width, -PGE.height, PGE.width*3, PGE.height*3);  
                     
             //  Enable p2 physics with gravity
             game.physics.startSystem(Phaser.Physics.P2JS);
@@ -132,15 +142,31 @@ function start() {
             game.physics.p2.friction = gameConfig.friction;
             game.physics.p2.restitution = gameConfig.restitution;
             
+            map = game.add.tilemap('map');
+            map.addTilesetImage('1');
+            map.addTilesetImage('2');
+            map.addTilesetImage('3');
+            map.addTilesetImage('4');
+            map.addTilesetImage('5');
+            map.addTilesetImage('6');
+            map.addTilesetImage('fan');      
+
+            game.grasslayer = map.createLayer('grass');
+    
+
+            game.platformlayer = map.createLayer('platform');
+     
+                 
+            
             if (game.cache.checkTextKey('levelConfig')){
             
                 var lev = game.cache.getText('levelConfig');
-                pb.addTiles(JSON.parse(lev).terrain);
+                //pb.addTiles(JSON.parse(lev).terrain);
                 
             } else {
             
                 // create terrain from default tile id sequence in game config
-                pb.addTiles(gameConfig.terrain);
+                //pb.addTiles(gameConfig.terrain);
             
             }
             
@@ -150,8 +176,8 @@ function start() {
             CG_Runner = game.physics.p2.createCollisionGroup();
             
             // create ball sprite
-            ball = game.add.sprite(500, 50, 'ball');
-            ball.scale.set(0.1);
+            ball = game.add.sprite(1000, 500, 'ball');
+            //ball.scale.set(0.1);
             
             // enable physics on non platform sprites
             if (gameConfig.debug) {
@@ -161,10 +187,10 @@ function start() {
             }
             
             // enable physics on platform sprites
-            pb.enablePhysics();
+            //pb.enablePhysics();
             
             // load collision polygons for platform sprites
-            pb.loadPolygons(CG_Terrain,[CG_Ball,CG_Runner]);
+            //pb.loadPolygons(CG_Terrain,[CG_Ball,CG_Runner]);
         
     
             // add circle body to ball
@@ -172,6 +198,9 @@ function start() {
             ball.body.addCircle(ball.width*0.5);
             ball.body.setCollisionGroup(CG_Ball);
             ball.body.collides(CG_Terrain);
+            
+            
+            PGE.convertTilemap2(map,'platform',CG_Terrain,[CG_Ball,CG_Runner]);
             
             game.camera.bounds = null; // disables camera bounds constraints
             game.camera.x = 0;
@@ -194,14 +223,14 @@ function start() {
             
             // "car" for runner
              
-            car.carBody = game.add.sprite(50, 350); //CARBODY
+            car.carBody = game.add.sprite(50, 350+200); //CARBODY
             car.carBody.scale.set(0.8);
             car.carBody.loadTexture('run', 0);
             car.carBody.animations.add('run');
             car.carBody.animations.play('run', 30, true);
             
-            car.wheel_front = game.add.sprite(50+30, 380); //FRONT WHEEL
-            car.wheel_back = game.add.sprite(50-30, 380); //BACK WHEEL 
+            car.wheel_front = game.add.sprite(50+30, 380+200); //FRONT WHEEL
+            car.wheel_back = game.add.sprite(50-30, 380+200); //BACK WHEEL 
 
             game.physics.p2.enable([car.wheel_front, car.wheel_back,car.carBody]); //ENABLE PHYSICS FOR THESE OBJECTS
             
@@ -275,7 +304,7 @@ function start() {
                 car.carBody.body.debug = value;
                 car.wheel_front.body.debug = value;
                 car.wheel_back.body.debug = value;
-                pb.setDrawBodies(value);
+                //pb.setDrawBodies(value);
             });
             
             gui.add(game, 'paused');
@@ -358,6 +387,7 @@ function start() {
                 if (car.carBody.body.angle > 30) car.carBody.body.angle = 30;
                 if (car.carBody.body.angle < -30) car.carBody.body.angle = -30;
                 
+                /*
                 // fan effect on ball
                 pb.forEachTile(function(tile){
                 
@@ -373,6 +403,7 @@ function start() {
                     }
                 
                 });
+                */
                 
                 
                 // parallax                
@@ -380,10 +411,10 @@ function start() {
                 
                 
                 // runner or ball falls offscreen => gameover
-                if (car.carBody.y - car.carBody.height*0.5 > 600){
+                if (car.carBody.y - car.carBody.height*0.5 > PGE.height){
                     setGameOver(true);
                 }
-                if (ball.y - ball.height*0.5 > 600){
+                if (ball.y - ball.height*0.5 > PGE.height){
                     setGameOver(true);
                 }
                
@@ -394,6 +425,7 @@ function start() {
 
             }
             
+            /*
             if (editing) {
                 var last = pb.lastTile();
                 if(last != undefined){
@@ -403,6 +435,8 @@ function start() {
                 }
             
             }
+            */
+            
         }
         
         function jumpCompleted(){
@@ -465,7 +499,7 @@ function start() {
         
         game.save = function() {
         
-            pb.save();
+            //pb.save();
         
         };
 
@@ -473,7 +507,7 @@ function start() {
         
             var hash = prompt('hash','cc5e544b20048a528ab44bf53684863e2d0cc487');
             if (hash !== null) {
-                pb.load(hash);
+                //pb.load(hash);
             }
         
         };          
@@ -497,7 +531,7 @@ function start() {
         };
         
         game.pickerClicked = function(e){
-        
+        /*
             var mouseX = e.offsetX;
             var mouseY = e.offsetY;
             
@@ -534,9 +568,9 @@ function start() {
                 pb.loadPolygons(CG_Terrain,[CG_Ball,CG_Runner]);
             }
 
-        
+            */
         };
-        
+
     };
 
     
@@ -546,3 +580,105 @@ function start() {
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
+
+PGE.convertTilemap2 = function (map, layer, cg, collideslist) {
+
+        layer = map.getLayer(layer);
+
+        var width = 0;
+        var sx = 0;
+        var sy = 0;
+
+        for (var y = 0, h = map.layers[layer].height; y < h; y++)
+        {
+            width = 0;
+
+            for (var x = 0, w = map.layers[layer].width; x < w; x++)
+            {
+                var tile = map.layers[layer].data[y][x];
+
+                if (tile && tile.index > -1)
+                {                  
+                        var body = game.physics.p2.createBody(tile.x * tile.width, tile.y * tile.height, 0, false);
+
+                        if (tile.index == 5) {
+                            // object 2
+                            PGE.loadPolygon2(body,'2a', '2_0');
+                        } 
+                        
+                        if (tile.index == 6) {
+                            PGE.loadPolygon2(body,'2a', '2_1');
+                        }                 
+
+                        if (tile.index == 7) {
+                            PGE.loadPolygon2(body,'2a', '2_2');
+                        }      
+
+                        if (tile.index == 8) {
+                            PGE.loadPolygon2(body,'2a', '2_3');
+                        }                               
+                        
+                        
+                       if (tile.index < 5 || tile.index >= 8) {
+                           body.addRectangle(tile.width, tile.height, tile.width / 2, tile.height / 2, 0);
+                       }
+                        
+                        body.debug = true;
+                        
+                        body.static=true;
+                        body.setCollisionGroup(cg);
+                        body.collides(collideslist);
+                        
+                        game.physics.p2.addBody(body);
+
+                        map.layers[layer].bodies.push(body);
+                    
+                }
+            }
+        }
+
+        return map.layers[layer].bodies;
+
+    }
+    
+    
+PGE.loadPolygon2 = function (body, key, object) {
+
+        var data = game.cache.getPhysicsData(key, object);
+
+        //  We've multiple Convex shapes, they should be CCW automatically
+        var cm = p2.vec2.create();
+
+        for (var i = 0; i < data.length; i++)
+        {
+            var vertices = [];
+
+            for (var s = 0; s < data[i].shape.length; s += 2)
+            {
+                vertices.push([ body.world.pxmi(data[i].shape[s]), body.world.pxmi(data[i].shape[s + 1]) ]);
+            }
+
+            var c = new p2.Convex(vertices);
+
+            // Move all vertices so its center of mass is in the local center of the convex
+            for (var j = 0; j !== c.vertices.length; j++)
+            {
+                var v = c.vertices[j];
+                p2.vec2.sub(v, v, c.centerOfMass);
+            }
+
+            p2.vec2.scale(cm, c.centerOfMass, 1);
+
+            c.updateTriangles();
+            c.updateCenterOfMass();
+            c.updateBoundingRadius();
+
+            body.data.addShape(c, cm);
+        }
+
+        body.data.aabbNeedsUpdate = true;
+        body.shapeChanged();
+
+        return true;
+
+    }    
