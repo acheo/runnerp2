@@ -81,10 +81,12 @@ function setGameOver(isGameOver){
             
             game.load.physics('1', 'assets/raul/1/1.json');
             game.load.physics('2a', 'assets/raul/2/2a.json');
-          //  game.load.physics('2b', 'assets/raul/2/2b.json');
-          //  game.load.physics('3a', 'assets/raul/3/3a.json');
-          //  game.load.physics('3b', 'assets/raul/3/3b.json');
-          //  game.load.physics('3c', 'assets/raul/3/3c.json');
+            game.load.physics('2b', 'assets/raul/2/2b.json');
+
+            game.load.physics('3a', 'assets/raul/3/3a.json');
+            game.load.physics('3b', 'assets/raul/3/3b.json');
+            game.load.physics('3c', 'assets/raul/3/3c.json');
+            
             game.load.atlasJSONHash('run', 'assets/sprites/running.png', 'assets/sprites/running.json');
             game.load.atlasJSONHash('jump', 'assets/sprites/jumping.png', 'assets/sprites/jumping.json');
             game.load.atlasJSONHash('kick', 'assets/sprites/kicking.png', 'assets/sprites/kicking.json');
@@ -616,10 +618,137 @@ PGE.convertTilemap2 = function (map, layer, cg, collideslist) {
 
                         if (tile.index == 8) {
                             PGE.loadPolygon2(body,'2a', '2_3');
+                        }
+
+                        if (tile.index == 9) {
+                            PGE.loadPolygon2(body,'2a', '2_4');
+                        }
+
+                        if (tile.index == 10) {
+                            PGE.loadPolygon2(body,'2a', '2_5');
+                        }
+
+                        if (tile.index == 11) {
+                            PGE.loadPolygon2(body,'2b', '2_6');
+                        }                    
+
+                        if (tile.index == 12) {
+                            PGE.loadPolygon2(body,'2b', '2_7');
+                        }
+
+                        if (tile.index == 13) {
+                            PGE.loadPolygon2(body,'2b', '2_8');
+                        }        
+
+                        if (tile.index == 14) {
+                            PGE.loadPolygon2(body,'2b', '2_9');
+                        }   
+
+                        if (tile.index == 15) {
+                            PGE.loadPolygon2(body,'2b', '2_10');
+                        }   
+
+                        if (tile.index == 16) {
+                            PGE.loadPolygon2(body,'2b', '2_11');
+                        }
+
+                        if (tile.index == 17) {
+                            PGE.loadPolygon2(body,'3a', '3_0');
+                        }     
+
+                        if (tile.index == 18) {
+                            PGE.loadPolygon2(body,'3a', '3_1');
+                        }
+
+                        if (tile.index == 19) {
+                            PGE.loadPolygon2(body,'3a', '3_2');
+                        }   
+
+                        if (tile.index == 20) {
+                            PGE.loadPolygon2(body,'3a', '3_3');
+                        }   
+
+                        if (tile.index == 21) {
+                            PGE.loadPolygon2(body,'3a', '3_4');
+                        }   
+
+                        if (tile.index == 22) {
+                            PGE.loadPolygon2(body,'3a', '3_5');
+                        }   
+
+                        if (tile.index == 23) {
+                            PGE.loadPolygon2(body,'3a', '3_6');
+                        }   
+
+                        if (tile.index == 23) {
+                            PGE.loadPolygon2(body,'3a', '3_7');
+                        }
+
+                        if (tile.index == 24) {
+                            PGE.loadPolygon2(body,'3b', '3_8');
+                        }
+
+                        if (tile.index == 25) {
+                            PGE.loadPolygon2(body,'3b', '3_9');
+                        }         
+
+                        if (tile.index == 26) {
+                            PGE.loadPolygon2(body,'3b', '3_10');
+                        }
+
+                        if (tile.index == 27) {
+                            PGE.loadPolygon2(body,'3b', '3_11');
+                        }    
+
+                        if (tile.index == 28) {
+                            PGE.loadPolygon2(body,'3b', '3_12');
+                        }                 
+
+                        if (tile.index == 29) {
+                            PGE.loadPolygon2(body,'3b', '3_13');
+                        }                                  
+       
+                        if (tile.index == 30) {
+                            PGE.loadPolygon2(body,'3b', '3_14');
+                        }        
+
+                        if (tile.index == 31) {
+                            PGE.loadPolygon2(body,'3b', '3_15');
+                        }
+
+                        if (tile.index == 32) {
+                            PGE.loadPolygon2(body,'3c', '3_16');
+                        }  
+
+                        if (tile.index == 33) {
+                            PGE.loadPolygon2(body,'3c', '3_17');
+                        }
+
+                        if (tile.index == 34) {
+                            PGE.loadPolygon2(body,'3c', '3_18');
+                        }
+
+                        if (tile.index == 35) {
+                            PGE.loadPolygon2(body,'3c', '3_19');
+                        }           
+
+                        if (tile.index == 36) {
+                            PGE.loadPolygon2(body,'3c', '3_20');
+                        }                      
+
+                        if (tile.index == 37) {
+                            PGE.loadPolygon2(body,'3c', '3_21');
+                        }       
+
+                        if (tile.index == 38) {
+                            PGE.loadPolygon2(body,'3c', '3_22');
+                        }       
+
+                        if (tile.index == 39) {
+                            PGE.loadPolygon2(body,'3c', '3_23');
                         }                               
                         
-                        
-                       if (tile.index < 5 || tile.index >= 8) {
+                       if (tile.index < 5 || tile.index >= 40) {
                            body.addRectangle(tile.width, tile.height, tile.width / 2, tile.height / 2, 0);
                        }
                         

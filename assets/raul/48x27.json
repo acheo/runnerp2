@@ -42,7 +42,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "image":"1.png",
+         "image":"1\/1.png",
          "imageheight":80,
          "imagewidth":80,
          "margin":0,
@@ -57,7 +57,7 @@
         }, 
         {
          "firstgid":5,
-         "image":"2.png",
+         "image":"2\/2.png",
          "imageheight":120,
          "imagewidth":160,
          "margin":0,
@@ -72,7 +72,7 @@
         }, 
         {
          "firstgid":17,
-         "image":"3.png",
+         "image":"3\/3.png",
          "imageheight":120,
          "imagewidth":320,
          "margin":0,
