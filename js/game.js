@@ -154,9 +154,8 @@ function start() {
             map.addTilesetImage('fan');      
 
             game.grasslayer = map.createLayer('grass');
-    
-
             game.platformlayer = map.createLayer('platform');
+            game.fanlayer = map.createLayer('fan');
      
                  
             
