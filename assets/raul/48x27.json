@@ -87,7 +87,7 @@
         }, 
         {
          "firstgid":41,
-         "image":"4.png",
+         "image":"4\/4.png",
          "imageheight":200,
          "imagewidth":320,
          "margin":0,
@@ -102,7 +102,7 @@
         }, 
         {
          "firstgid":81,
-         "image":"5.png",
+         "image":"5\/5.png",
          "imageheight":40,
          "imagewidth":40,
          "margin":0,
@@ -117,7 +117,7 @@
         }, 
         {
          "firstgid":82,
-         "image":"6.png",
+         "image":"6\/6.png",
          "imageheight":200,
          "imagewidth":320,
          "margin":0,

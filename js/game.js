@@ -69,9 +69,9 @@ function setGameOver(isGameOver){
             game.load.image('1', 'assets/raul/1/1.png');
             game.load.image('2', 'assets/raul/2/2.png');
             game.load.image('3', 'assets/raul/3/3.png');
-            game.load.image('4', 'assets/raul/4.png');
-            game.load.image('5', 'assets/raul/5.png');
-            game.load.image('6', 'assets/raul/6.png');
+            game.load.image('4', 'assets/raul/4/4.png');
+            game.load.image('5', 'assets/raul/5/5.png');
+            game.load.image('6', 'assets/raul/6/6.png');
             game.load.image('fan', 'assets/raul/fan.png');            
             game.load.image('ball', 'assets/raul/ball.png');
             
