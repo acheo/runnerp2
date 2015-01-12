@@ -1,0 +1,67 @@
+	{ 
+		
+		"4_8": [
+			
+		]
+		
+		, 
+		"4_9": [
+			
+		]
+		
+		, 
+		"4_10": [
+			
+		]
+		
+		, 
+		"4_11": [
+			
+				{
+					"density": 2, "friction": 0, "bounce": 0, 
+					"filter": { "categoryBits": 1, "maskBits": 65535 },
+					"shape": [   40, 40  ,  3, 40  ,  39, 20  ]
+				}  
+		]
+		
+		, 
+		"4_12": [
+			
+				{
+					"density": 2, "friction": 0, "bounce": 0, 
+					"filter": { "categoryBits": 1, "maskBits": 65535 },
+					"shape": [   0, 40  ,  0, 19  ,  31, 1  ,  40, 0  ,  40, 40  ]
+				}  
+		]
+		
+		, 
+		"4_13": [
+			
+				{
+					"density": 2, "friction": 0, "bounce": 0, 
+					"filter": { "categoryBits": 1, "maskBits": 65535 },
+					"shape": [   0, 40  ,  0, 0  ,  40, 0  ,  40, 40  ]
+				}  
+		]
+		
+		, 
+		"4_14": [
+			
+				{
+					"density": 2, "friction": 0, "bounce": 0, 
+					"filter": { "categoryBits": 1, "maskBits": 65535 },
+					"shape": [   0, 40  ,  0, 0  ,  40, 0  ,  40, 40  ]
+				}  
+		]
+		
+		, 
+		"4_15": [
+			
+				{
+					"density": 2, "friction": 0, "bounce": 0, 
+					"filter": { "categoryBits": 1, "maskBits": 65535 },
+					"shape": [   0, 40  ,  0, 0  ,  40, 0  ,  40, 40  ]
+				}  
+		]
+		
+	}

@@ -1,0 +1,57 @@
+	{ 
+		
+		"4_32": [
+			
+				{
+					"density": 2, "friction": 0, "bounce": 0, 
+					"filter": { "categoryBits": 1, "maskBits": 65535 },
+					"shape": [   0, 0  ,  40, 0  ,  40, 36  ,  0, 40  ]
+				}  
+		]
+		
+		, 
+		"4_33": [
+			
+				{
+					"density": 2, "friction": 0, "bounce": 0, 
+					"filter": { "categoryBits": 1, "maskBits": 65535 },
+					"shape": [   0, 0  ,  40, 0  ,  40, 22  ,  1, 35  ]
+				}  
+		]
+		
+		, 
+		"4_34": [
+			
+				{
+					"density": 2, "friction": 0, "bounce": 0, 
+					"filter": { "categoryBits": 1, "maskBits": 65535 },
+					"shape": [   0, 0  ,  40, 0  ,  40, 3  ,  1, 21  ]
+				}  
+		]
+		
+		, 
+		"4_35": [
+			
+		]
+		
+		, 
+		"4_36": [
+			
+		]
+		
+		, 
+		"4_37": [
+			
+		]
+		
+		, 
+		"4_38": [
+			
+		]
+		
+		, 
+		"4_39": [
+			
+		]
+		
+	}
