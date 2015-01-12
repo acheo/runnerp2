@@ -11,7 +11,7 @@
     var text1;
     var progress_empty;
     var progress_full;
-    var pb; // platformbuilder
+
     var CG_Terrain;
     var CG_Ball;
     var CG_Runner;
@@ -40,11 +40,7 @@ function setGameOver(isGameOver){
         PGE.height = 1080;
     
         game = new Phaser.Game(PGE.width, PGE.height, Phaser.CANVAS, '', { preload: preload, create: create, update: update, render: render });
-        
-        //pb = new PGE.PlatformBuilder(game);
-        
 
-        
         function preload () {
 
             // load progress bar art
@@ -94,14 +90,6 @@ function setGameOver(isGameOver){
             game.load.text('gameConfig', 'assets/gameConfig.json');
             
             
-            var hash = getParameterByName('hash');
-            
-            if (hash !== ''){
-                
-                game.load.text('levelConfig', 'api/'+hash+'.json');
-                
-            }
-            
             // start loading
             game.load.start();
         
@@ -132,7 +120,6 @@ function start() {
             gameConfig = JSON.parse(a);
             // add background image
             bg = game.add.image(0, 0, 'bg');
-            //bg.scale.set(0.6);
 
             // creation of large world bounds
             game.world.bounds = new Phaser.Rectangle(-PGE.width, -PGE.height, PGE.width*3, PGE.height*3);  
@@ -156,20 +143,7 @@ function start() {
             game.grasslayer = map.createLayer('grass');
             game.platformlayer = map.createLayer('platform');
             game.fanlayer = map.createLayer('fan');
-     
-                 
-            
-            if (game.cache.checkTextKey('levelConfig')){
-            
-                var lev = game.cache.getText('levelConfig');
-                //pb.addTiles(JSON.parse(lev).terrain);
-                
-            } else {
-            
-                // create terrain from default tile id sequence in game config
-                //pb.addTiles(gameConfig.terrain);
-            
-            }
+   
             
             // Create separate collision groups for terrain, runner and ball to allow independent collisions (terrain-ball and terrain-runner)
             CG_Terrain = game.physics.p2.createCollisionGroup();
@@ -178,7 +152,6 @@ function start() {
             
             // create ball sprite
             ball = game.add.sprite(1000, 500, 'ball');
-            //ball.scale.set(0.1);
             
             // enable physics on non platform sprites
             if (gameConfig.debug) {
@@ -187,13 +160,7 @@ function start() {
                 game.physics.p2.enable([ball]);
             }
             
-            // enable physics on platform sprites
-            //pb.enablePhysics();
-            
-            // load collision polygons for platform sprites
-            //pb.loadPolygons(CG_Terrain,[CG_Ball,CG_Runner]);
-        
-    
+     
             // add circle body to ball
             ball.body.clearShapes();
             ball.body.addCircle(ball.width*0.5);
@@ -236,12 +203,9 @@ function start() {
             game.physics.p2.enable([car.wheel_front, car.wheel_back,car.carBody]); //ENABLE PHYSICS FOR THESE OBJECTS
             
             //DEFINE CAR BODY
-            car.carBody.body.setRectangle(30,90);
-            
+            car.carBody.body.setRectangle(30,90);            
             car.carBody.body.mass = 1.0;
             car.carBody.body.setCollisionGroup(CG_Runner);
-            //car.carBody.body.collides(CG_Terrain);
-            //car.carBody.anchor.y = 0.6;
 
             //DEFINE FRONT WHEEL
             car.wheel_front.body.setCircle(35);
@@ -305,17 +269,10 @@ function start() {
                 car.carBody.body.debug = value;
                 car.wheel_front.body.debug = value;
                 car.wheel_back.body.debug = value;
-                //pb.setDrawBodies(value);
             });
             
             gui.add(game, 'paused');
-            
-            gui.add(game, 'editmode');
-            
-            gui.add(game, 'save');
-            
-            gui.add(game, 'open');            
-            
+                                   
             gui.add(game, 'restart');
             
             started = true;
@@ -426,17 +383,6 @@ function start() {
 
             }
             
-            /*
-            if (editing) {
-                var last = pb.lastTile();
-                if(last != undefined){
-                    game.camera.x = last.sprite.x-300;
-                } else {
-                    game.camera.x = 0;
-                }
-            
-            }
-            */
             
         }
         
@@ -497,90 +443,10 @@ function start() {
             setGameOver(false);
         
         };
-        
-        game.save = function() {
-        
-            //pb.save();
-        
-        };
-
-        game.open = function() {
-        
-            var hash = prompt('hash','cc5e544b20048a528ab44bf53684863e2d0cc487');
-            if (hash !== null) {
-                //pb.load(hash);
-            }
-        
-        };          
-        
-        // activate map edit mode
-        game.editmode = function() {
-            
-            editing = !editing;
-            
-            if (editing) {
-            
-                $('#picker').css('display','block');
-            
-            
-            } else {
-            
-                $('#picker').css('display','none');
-            
-            }
-            
-        };
-        
-        game.pickerClicked = function(e){
-        /*
-            var mouseX = e.offsetX;
-            var mouseY = e.offsetY;
-            
-            var col = Math.floor(mouseX / (200/4));
-            var row = Math.floor(mouseY / (150/3));
-            
-            var tileIndex = row * 4 + col;
-        
-            //alert(tileIndex);
-            if (tileIndex >= 0 && tileIndex <= 7){
-                pb.addTiles([tileIndex]);
-                game.physics.p2.enable([pb.lastTile().sprite]);
-                pb.loadPolygons(CG_Terrain,[CG_Ball,CG_Runner]);
-            }
-            
-            if (tileIndex == 8){
-                pb.deleteLastTile();
-            }
-            
-            if(tileIndex == 9){
-                pb.clear();
-                
-            }
-            if(tileIndex == 10){
-                pb.printTiles();
-                game.editmode();
-                game.restart();
-            }
-            
-            // fan
-            if (tileIndex == 11){
-                pb.addTiles([100]);
-                game.physics.p2.enable([pb.lastTile().sprite]);
-                pb.loadPolygons(CG_Terrain,[CG_Ball,CG_Runner]);
-            }
-
-            */
-        };
+                     
 
     };
 
-    
- function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
 
 PGE.convertTilemap2 = function (map, layer, cg, collideslist) {
 
