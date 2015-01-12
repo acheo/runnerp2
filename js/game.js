@@ -83,6 +83,12 @@ function setGameOver(isGameOver){
             game.load.physics('3b', 'assets/raul/3/3b.json');
             game.load.physics('3c', 'assets/raul/3/3c.json');
             
+            game.load.physics('4a', 'assets/raul/4/4a.json');
+            game.load.physics('4b', 'assets/raul/4/4b.json');
+            game.load.physics('4c', 'assets/raul/4/4c.json');
+            game.load.physics('4d', 'assets/raul/4/4d.json');
+            game.load.physics('4e', 'assets/raul/4/4e.json');            
+            
             game.load.atlasJSONHash('run', 'assets/sprites/running.png', 'assets/sprites/running.json');
             game.load.atlasJSONHash('jump', 'assets/sprites/jumping.png', 'assets/sprites/jumping.json');
             game.load.atlasJSONHash('kick', 'assets/sprites/kicking.png', 'assets/sprites/kicking.json');
@@ -611,9 +617,169 @@ PGE.convertTilemap2 = function (map, layer, cg, collideslist) {
 
                         if (tile.index == 39) {
                             PGE.loadPolygon2(body,'3c', '3_23');
-                        }                               
+                        }
+
+                        if (tile.index == 40) {
+                            PGE.loadPolygon2(body,'4a', '4_0');
+                        }
+
+                        if (tile.index == 41) {
+                            PGE.loadPolygon2(body,'4a', '4_1');
+                        }
+
+                        if (tile.index == 41) {
+                            PGE.loadPolygon2(body,'4a', '4_2');
+                        }
+
+                        if (tile.index == 42) {
+                            PGE.loadPolygon2(body,'4a', '4_3');
+                        }
+
+                        if (tile.index == 43) {
+                            PGE.loadPolygon2(body,'4a', '4_4');
+                        }
+
+                        if (tile.index == 44) {
+                            PGE.loadPolygon2(body,'4a', '4_5');
+                        }
+
+                        if (tile.index == 45) {
+                            PGE.loadPolygon2(body,'4a', '4_6');
+                        }
+
+                        if (tile.index == 46) {
+                            PGE.loadPolygon2(body,'4a', '4_7');
+                        }
                         
-                       if (tile.index < 5 || tile.index >= 40) {
+                        if (tile.index == 47) {
+                            PGE.loadPolygon2(body,'4b', '4_8');
+                        }
+
+                        if (tile.index == 48) {
+                            PGE.loadPolygon2(body,'4b', '4_9');
+                        }
+
+                        if (tile.index == 49) {
+                            PGE.loadPolygon2(body,'4b', '4_10');
+                        }
+
+                        if (tile.index == 50) {
+                            PGE.loadPolygon2(body,'4b', '4_11');
+                        }
+
+                        if (tile.index == 51) {
+                            PGE.loadPolygon2(body,'4b', '4_12');
+                        }
+
+                        if (tile.index == 52) {
+                            PGE.loadPolygon2(body,'4b', '4_13');
+                        }
+
+                        if (tile.index == 53) {
+                            PGE.loadPolygon2(body,'4b', '4_14');
+                        }
+
+                        if (tile.index == 54) {
+                            PGE.loadPolygon2(body,'4b', '4_15');
+                        }
+
+                        if (tile.index == 55) {
+                            PGE.loadPolygon2(body,'4c', '4_16');
+                        }
+
+                        if (tile.index == 56) {
+                            PGE.loadPolygon2(body,'4c', '4_17');
+                        }
+
+                        if (tile.index == 57) {
+                            PGE.loadPolygon2(body,'4c', '4_18');
+                        }
+
+                        if (tile.index == 58) {
+                            PGE.loadPolygon2(body,'4c', '4_19');
+                        }
+
+                        if (tile.index == 59) {
+                            PGE.loadPolygon2(body,'4c', '4_20');
+                        }
+
+                        if (tile.index == 60) {
+                            PGE.loadPolygon2(body,'4c', '4_21');
+                        }
+
+                        if (tile.index == 61) {
+                            PGE.loadPolygon2(body,'4c', '4_22');
+                        }
+
+                        if (tile.index == 62) {
+                            PGE.loadPolygon2(body,'4c', '4_23');
+                        }
+
+                        if (tile.index == 63) {
+                            PGE.loadPolygon2(body,'4d', '4_24');
+                        }
+
+                        if (tile.index == 64) {
+                            PGE.loadPolygon2(body,'4d', '4_25');
+                        }
+
+                        if (tile.index == 65) {
+                            PGE.loadPolygon2(body,'4d', '4_26');
+                        }
+
+                        if (tile.index == 66) {
+                            PGE.loadPolygon2(body,'4d', '4_27');
+                        }
+
+                        if (tile.index == 67) {
+                            PGE.loadPolygon2(body,'4d', '4_28');
+                        }
+
+                        if (tile.index == 68) {
+                            PGE.loadPolygon2(body,'4d', '4_29');
+                        }
+
+                        if (tile.index == 69) {
+                            PGE.loadPolygon2(body,'4d', '4_30');
+                        }
+
+                        if (tile.index == 70) {
+                            PGE.loadPolygon2(body,'4d', '4_31');
+                        }
+
+                        if (tile.index == 71) {
+                            PGE.loadPolygon2(body,'4e', '4_32');
+                        }
+
+                        if (tile.index == 72) {
+                            PGE.loadPolygon2(body,'4e', '4_33');
+                        }
+
+                        if (tile.index == 73) {
+                            PGE.loadPolygon2(body,'4e', '4_34');
+                        }
+
+                        if (tile.index == 74) {
+                            PGE.loadPolygon2(body,'4e', '4_35');
+                        }
+
+                        if (tile.index == 75) {
+                            PGE.loadPolygon2(body,'4e', '4_36');
+                        }
+
+                        if (tile.index == 76) {
+                            PGE.loadPolygon2(body,'4e', '4_37');
+                        }
+
+                        if (tile.index == 77) {
+                            PGE.loadPolygon2(body,'4e', '4_38');
+                        }
+
+                        if (tile.index == 78) {
+                            PGE.loadPolygon2(body,'4e', '4_39');
+                        }                          
+                        
+                       if (tile.index < 5 || tile.index >= 79) {
                            body.addRectangle(tile.width, tile.height, tile.width / 2, tile.height / 2, 0);
                        }
                         
