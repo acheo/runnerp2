@@ -1,2 +1,2 @@
-runnerp2
+Phaser endless runner with browser based level configuration prototype
 ========
