@@ -3,7 +3,7 @@
 <img src="http://i.imgur.com/KGRZTPw.png">
 
 # Features
-* Phaserjs P2 Physics
+* [Phaserjs](http://phaser.io/) P2 Physics
 * Parallax (Single layer)
 * Edit level in the browser
 
