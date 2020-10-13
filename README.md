@@ -8,7 +8,7 @@
 * Edit level in the browser
 
 # Demo
-http://apps.unitedcommand.com/runner/
+http://unitedcommand.com/apps/runner/
 
 # Controls
 * Left arrow (Jump)
